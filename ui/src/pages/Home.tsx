@@ -73,7 +73,7 @@ export default function Home() {
                 id="deployment"
                 value={selectedWorkflow}
                 onChange={(e) => setSelectedWorkflow(e.target.value)}
-                className="w-full p-2 border rounded text-black bg-white dark:bg-gray-800"
+                className="w-full p-2 border rounded text-black dark:text-gray-200 bg-white dark:bg-gray-800"
               >
                 <option value="dragon">dragon</option>
                 <option value="cow">cow</option>
@@ -87,7 +87,7 @@ export default function Home() {
                 id="inputText"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="w-full p-2 border rounded text-black"
+                className="w-full p-2 border rounded text-black dark:text-gray-200"
                 rows={4}
                 required
               />
