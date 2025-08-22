@@ -29,7 +29,7 @@ export default function LlamaPartyPage() {
 
       <div className="max-w-lg p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-center">
         <h2 className="text-xl font-bold mb-4">Congratulations!</h2>
-        <p className="text-gray-600 mb-6">You found the secret page!</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">You found the secret page!</p>
 
         <div className="flex flex-col gap-4">
           <button onClick={celebrate} className="py-2 px-4 bg-foreground text-background rounded-md hover:opacity-80">
@@ -38,7 +38,7 @@ export default function LlamaPartyPage() {
 
           <Link
             to="/"
-            className="py-2 px-4 bg-white text-foreground border border-gray-300 rounded-md hover:bg-gray-50 text-center"
+            className="py-2 px-4 bg-background text-foreground border border-gray-300 rounded-md hover:bg-gray-50 text-center"
           >
             Back to workflow
           </Link>
