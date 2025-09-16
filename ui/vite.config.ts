@@ -28,6 +28,8 @@ export default defineConfig(({}) => {
     },
     base: basePath,
     define: {
+      // Copy through some standard environment variables to make
+      // integration with workflows api easier
       ...(deploymentId && {
         "import.meta.env.VITE_LLAMA_DEPLOY_DEPLOYMENT_NAME":
           JSON.stringify(deploymentId),
