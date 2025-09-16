@@ -1,7 +1,7 @@
 import asyncio
 
 from workflows import Context, Workflow, step
-from workflows.events import Event, StartEvent, StopEvent
+from workflows.events import StartEvent, StopEvent
 import logging
 
 logger = logging.getLogger(__name__)

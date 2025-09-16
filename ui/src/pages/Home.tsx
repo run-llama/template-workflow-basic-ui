@@ -75,7 +75,7 @@ function HandlerOuput({ handlerId }: { handlerId: string }) {
   const taskData = useWorkflowTask(handlerId);
 
   const result = taskData.events.find((event) =>
-    event.type.match(/PongEvent$/)
+    event.type.match(/PongEvent$/),
   ) as { type: string; data: { message: string } } | undefined;
 
   return <Output>{result ? result.data.message : "Running... "}</Output>;
