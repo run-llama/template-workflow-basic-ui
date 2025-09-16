@@ -17,7 +17,21 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "ruff>=0.13.0",
+    "ty>=0.0.1a16",
+    "pytest>=8.4.1",
+    "hatch>=1.14.1",
 ]
+
+
+[tool.hatch.envs.default.scripts]
+"format" = "ruff format ."
+"format-check" = "ruff format --check ."
+"lint" = "ruff check --fix ."
+"lint-check" = ["ruff check ."]
+typecheck = "ty check src"
+test = "pytest"
+"all-check" = ["format-check", "lint-check", "test"]
+"all-fix" = ["format", "lint", "test"]
 
 [tool.llamadeploy.ui]
 directory = "./ui"
@@ -27,3 +41,4 @@ env-files = [".env"]
 
 [tool.llamadeploy.workflows]
 default = "app.workflow:workflow"
+
