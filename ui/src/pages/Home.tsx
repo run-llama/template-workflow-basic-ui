@@ -13,9 +13,9 @@ export default function Home() {
           llama-ui to call the workflow. Customize this app with your own
           workflow and UI.
         </div>
-        <div className="flex flex-row gap-4 items-center justify-center w-full">
+        <div className="flex flex-row gap-4 items-start justify-center w-full">
           {taskId ? (
-            <HandlerOuput handlerId={taskId} />
+            <HandlerOutput handlerId={taskId} />
           ) : (
             <Output>
               <span className="text-black/60 dark:text-white/60">
@@ -71,14 +71,35 @@ function RunButton({
   );
 }
 
-function HandlerOuput({ handlerId }: { handlerId: string }) {
+function HandlerOutput({ handlerId }: { handlerId: string }) {
+  // stream events and result from the workflow
   const taskData = useWorkflowTask(handlerId);
 
-  const result = taskData.events.find((event) =>
+  // read workflow events here
+  const pongs = taskData.events.filter((event) =>
     event.type.match(/PongEvent$/),
-  ) as { type: string; data: { message: string } } | undefined;
+  ) as { type: string; data: { message: string } }[];
+  const completed = taskData.events.find((event) =>
+    event.type.match(/WorkflowCompletedEvent$/),
+  ) as { type: string; data: { timestamp: string } } | undefined;
 
-  return <Output>{result ? result.data.message : "Running... "}</Output>;
+  return (
+    <div className="flex flex-col gap-4 w-full min-h-60">
+      <Output>{completed ? completed.data.timestamp : "Running... "}</Output>
+      {pongs.map((pong, index) => (
+        <span
+          className="text-black/60 dark:text-white/60 text-sm m-0"
+          key={pong.data.message}
+          style={{
+            animation: "fade-in-left 80ms ease-out both",
+            willChange: "opacity, transform",
+          }}
+        >
+          {pong.data.message}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function Output({ children }: { children: React.ReactNode }) {

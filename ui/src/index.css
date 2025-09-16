@@ -83,3 +83,15 @@ body {
     filter: blur(28px) saturate(110%);
   }
 }
+
+/* Simple fade-in-up animation for streamed items */
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
