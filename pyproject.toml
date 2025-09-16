@@ -1,15 +1,13 @@
 [project]
-name = "quick-start"
+name = "app"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Adrian Lyjak", email = "adrianlyjak@gmail.com" }
-]
+authors = []
 requires-python = ">=3.12"
 dependencies = [
-    "llama-index-workflows[server]>=2.0.1",
-    "python-cowsay>=1.2.1",
+    "llama-index-workflows[server]>=2.2.0",
+    "ruff>=0.13.0",
 ]
 
 [build-system]
@@ -17,11 +15,15 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = []
+dev = [
+    "ruff>=0.13.0",
+]
 
 [tool.llamadeploy.ui]
 directory = "./ui"
 
 [tool.llamadeploy]
-app = "quick_start.workflow:app"
 env-files = [".env"]
+
+[tool.llamadeploy.workflows]
+default = "app.workflow:workflow"

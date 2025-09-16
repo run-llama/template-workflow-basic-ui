@@ -3,11 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-geist-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+  --font-geist-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
-  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-geist-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 @theme inline {
@@ -30,4 +32,54 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Light/Dark aware subtle aurora gradient backdrop */
+.aurora-container {
+  position: relative;
+}
 
+.aurora-container::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% -10% -10%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      60% 40% at 80% 0%,
+      rgba(255, 182, 193, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      50% 35% at 20% 10%,
+      rgba(147, 112, 219, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      40% 45% at 50% 100%,
+      rgba(64, 224, 208, 0.22),
+      transparent 60%
+    );
+  filter: blur(24px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .aurora-container::before {
+    background:
+      radial-gradient(
+        60% 40% at 80% 0%,
+        rgba(255, 105, 180, 0.16),
+        transparent 60%
+      ),
+      radial-gradient(
+        50% 35% at 20% 10%,
+        rgba(138, 43, 226, 0.18),
+        transparent 60%
+      ),
+      radial-gradient(
+        40% 45% at 50% 100%,
+        rgba(0, 206, 209, 0.14),
+        transparent 60%
+      );
+    filter: blur(28px) saturate(110%);
+  }
+}
