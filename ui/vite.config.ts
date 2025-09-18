@@ -4,7 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({}) => {
-  const deploymentId = process.env.LLAMA_DEPLOY_DEPLOYMENT_URL_ID;
+  const deploymentName = process.env.LLAMA_DEPLOY_DEPLOYMENT_NAME;
   const basePath = process.env.LLAMA_DEPLOY_DEPLOYMENT_BASE_PATH;
   const projectId = process.env.LLAMA_DEPLOY_PROJECT_ID;
   const port = process.env.PORT;
@@ -30,9 +30,9 @@ export default defineConfig(({}) => {
     define: {
       // Copy through some standard environment variables to make
       // integration with workflows api easier
-      ...(deploymentId && {
+      ...(deploymentName && {
         "import.meta.env.VITE_LLAMA_DEPLOY_DEPLOYMENT_NAME":
-          JSON.stringify(deploymentId),
+          JSON.stringify(deploymentName),
       }),
       ...(basePath && {
         "import.meta.env.VITE_LLAMA_DEPLOY_DEPLOYMENT_BASE_PATH":
