@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useWorkflowTask, useWorkflowTaskCreate } from "@llamaindex/ui";
+import { useWorkflowHandler, useWorkflowRun } from "@llamaindex/ui";
 
 export default function Home() {
   const [taskId, setTaskId] = useState<string | null>(null);
-  const createHandler = useWorkflowTaskCreate();
+  const createHandler = useWorkflowRun();
   return (
     <div className="aurora-container relative min-h-screen overflow-hidden bg-background text-foreground">
       <main className="relative mx-auto flex min-h-screen max-w-2xl px-6 flex-col gap-4 items-center justify-center">
@@ -27,7 +27,7 @@ export default function Home() {
             disabled={createHandler.isCreating}
             onClick={() =>
               createHandler
-                .createTask("default", {
+                .runWorkflow("default", {
                   message: `${new Date().toLocaleTimeString()} PING`,
                 })
                 .then((task) => setTaskId(task.handler_id))
@@ -73,13 +73,13 @@ function RunButton({
 
 function HandlerOutput({ handlerId }: { handlerId: string }) {
   // stream events and result from the workflow
-  const taskData = useWorkflowTask(handlerId);
+  const handler = useWorkflowHandler(handlerId);
 
   // read workflow events here
-  const pongs = taskData.events.filter((event) =>
+  const pongs = handler.events.filter((event) =>
     event.type.match(/PongEvent$/),
   ) as { type: string; data: { message: string } }[];
-  const completed = taskData.events.find((event) =>
+  const completed = handler.events.find((event) =>
     event.type.match(/WorkflowCompletedEvent$/),
   ) as { type: string; data: { timestamp: string } } | undefined;
 

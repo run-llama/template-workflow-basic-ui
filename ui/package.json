@@ -19,7 +19,7 @@
     "react-router-dom": "^7.8.0"
   },
   "devDependencies": {
-    "@llamaindex/ui": "^1.0.3",
+    "@llamaindex/ui": "^2.1.1",
     "@tailwindcss/postcss": "^4",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",

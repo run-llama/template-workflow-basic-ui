@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import { ApiProvider, ApiClients, createWorkflowClient } from "@llamaindex/ui";
+import { ApiProvider, ApiClients, createWorkflowsClient } from "@llamaindex/ui";
 
 const deploymentName =
   import.meta.env.VITE_LLAMA_DEPLOY_DEPLOYMENT_NAME || "default";
 const api: ApiClients = {
-  workflowsClient: createWorkflowClient({
+  workflowsClient: createWorkflowsClient({
     baseUrl: `/deployments/${deploymentName}`,
   }),
 };
