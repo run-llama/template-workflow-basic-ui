@@ -122,7 +122,7 @@ function HandlerOutput({ handlerId }: { handlerId: string | null }) {
             )}
         </span>
       ))}
-      {!completed && (
+      {!completed && pongsOrResume.length > 0 && (
         <button
           onClick={() =>
             handler.sendEvent({
