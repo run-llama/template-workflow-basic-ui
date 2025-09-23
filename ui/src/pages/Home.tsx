@@ -1,28 +1,23 @@
 import { useState } from "react";
-import { useWorkflowHandler, useWorkflowRun } from "@llamaindex/ui";
+import {
+  type WorkflowEvent,
+  useWorkflowHandler,
+  useWorkflowRun,
+} from "@llamaindex/ui";
 
 export default function Home() {
   const [taskId, setTaskId] = useState<string | null>(null);
   const createHandler = useWorkflowRun();
   return (
     <div className="aurora-container relative min-h-screen overflow-hidden bg-background text-foreground">
-      <main className="relative mx-auto flex min-h-screen max-w-2xl px-6 flex-col gap-4 items-center justify-center">
+      <main className="relative mx-auto flex min-h-screen max-w-2xl px-6 flex-col gap-4 items-center justify-center my-12">
         <div className="text-center mb-4 text-black/80 dark:text-white/80 text-lg">
-          This is a basic starter app for LlamaDeploy. It's running a simple
-          workflow on the backend, and vite with react on the frontend with
-          llama-ui to call the workflow. Customize this app with your own
-          workflow and UI.
+          This is a basic starter app for LlamaDeploy. It's running a simple 
+          Human-in-the-loop workflow on the backend, and vite with react on the frontend with
+          llama-ui to call the workflow. Customize this app with your own workflow and UI.
         </div>
         <div className="flex flex-row gap-4 items-start justify-center w-full">
-          {taskId ? (
-            <HandlerOutput handlerId={taskId} />
-          ) : (
-            <Output>
-              <span className="text-black/60 dark:text-white/60">
-                Workflow result will show here.
-              </span>
-            </Output>
-          )}
+          <HandlerOutput handlerId={taskId} />
           <RunButton
             disabled={createHandler.isCreating}
             onClick={() =>
@@ -71,33 +66,75 @@ function RunButton({
   );
 }
 
-function HandlerOutput({ handlerId }: { handlerId: string }) {
+type PongEvent = { type: `${string}.PongEvent`; data: { message: string } };
+type PauseEvent = { type: `${string}.PauseEvent`; data: { timestamp: string } };
+
+function isPongEvent(event: WorkflowEvent): event is PongEvent {
+  return event.type.endsWith(".PongEvent");
+}
+function isPauseEvent(event: WorkflowEvent): event is PauseEvent {
+  return event.type.endsWith(".PauseEvent");
+}
+
+function HandlerOutput({ handlerId }: { handlerId: string | null }) {
   // stream events and result from the workflow
-  const handler = useWorkflowHandler(handlerId);
+  const handler = useWorkflowHandler(handlerId ?? "");
 
   // read workflow events here
-  const pongs = handler.events.filter((event) =>
-    event.type.match(/PongEvent$/),
-  ) as { type: string; data: { message: string } }[];
+  const pongsOrResume = handler.events.filter(
+    (event) => isPongEvent(event) || isPauseEvent(event)
+  ) as (PongEvent | PauseEvent)[];
   const completed = handler.events.find((event) =>
-    event.type.match(/WorkflowCompletedEvent$/),
+    event.type.endsWith(".WorkflowCompletedEvent")
   ) as { type: string; data: { timestamp: string } } | undefined;
 
   return (
-    <div className="flex flex-col gap-4 w-full min-h-60">
+    <div className="flex flex-col gap-4 w-full min-h-60 items-center">
       <Output>{completed ? completed.data.timestamp : "Running... "}</Output>
-      {pongs.map((pong, index) => (
+      {pongsOrResume.map((pong, index) => (
         <span
-          className="text-black/60 dark:text-white/60 text-sm m-0"
-          key={pong.data.message}
+          className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-black/3 
+          dark:bg-white/2 text-black/60 dark:text-white/60 rounded border border-black/5 
+          dark:border-white/5 backdrop-blur-sm"
+          key={index}
           style={{
             animation: "fade-in-left 80ms ease-out both",
             willChange: "opacity, transform",
           }}
         >
-          {pong.data.message}
+          {isPongEvent(pong) ? pong.data.message : pong.data.timestamp}
+          {isPauseEvent(pong) &&
+            index === pongsOrResume.length - 1 &&
+            !completed && (
+              <button
+                onClick={() =>
+                  handler.sendEvent({
+                    type: "app.workflow.ResumeEvent",
+                    data: { should_continue: true },
+                  })
+                }
+                className="ml-2 px-2 py-0.5 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 
+              text-black/80 dark:text-white/80 text-xs rounded border border-black/10 dark:border-white/10"
+              >
+                Resume?
+              </button>
+            )}
         </span>
       ))}
+      {!completed && (
+        <button
+          onClick={() =>
+            handler.sendEvent({
+              type: "app.workflow.ResumeEvent",
+              data: { should_continue: false },
+            })
+          }
+          className="ml-2 px-2 py-0.5 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 
+              text-black/80 dark:text-white/80 text-xs rounded border border-black/10 dark:border-white/10"
+        >
+          Stop
+        </button>
+      )}
     </div>
   );
 }
