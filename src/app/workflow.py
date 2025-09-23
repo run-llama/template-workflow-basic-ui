@@ -2,7 +2,13 @@ import asyncio
 import time
 
 from workflows import Context, Workflow, step
-from workflows.events import HumanResponseEvent, InputRequiredEvent, StartEvent, StopEvent, Event
+from workflows.events import (
+    HumanResponseEvent,
+    InputRequiredEvent,
+    StartEvent,
+    StopEvent,
+    Event,
+)
 import logging
 from datetime import datetime
 
@@ -28,8 +34,10 @@ class PauseEvent(InputRequiredEvent):
 class ResumeEvent(HumanResponseEvent):
     should_continue: bool
 
+
 class OkGoEvent(Event):
     message: str
+
 
 class DefaultWorkflow(Workflow):
     @step
@@ -54,7 +62,6 @@ class DefaultWorkflow(Workflow):
                 PongEvent(message=f"+{elapsed:.0f}ms PONG {i + 1}/5 ")
             )
             await asyncio.sleep(0.2)
-
 
         return PauseEvent(
             timestamp="workflow paused at "

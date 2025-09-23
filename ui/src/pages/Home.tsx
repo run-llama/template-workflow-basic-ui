@@ -12,9 +12,10 @@ export default function Home() {
     <div className="aurora-container relative min-h-screen overflow-hidden bg-background text-foreground">
       <main className="relative mx-auto flex min-h-screen max-w-2xl px-6 flex-col gap-4 items-center justify-center my-12">
         <div className="text-center mb-4 text-black/80 dark:text-white/80 text-lg">
-          This is a basic starter app for LlamaDeploy. It's running a simple 
-          Human-in-the-loop workflow on the backend, and vite with react on the frontend with
-          llama-ui to call the workflow. Customize this app with your own workflow and UI.
+          This is a basic starter app for LlamaDeploy. It's running a simple
+          Human-in-the-loop workflow on the backend, and vite with react on the
+          frontend with llama-ui to call the workflow. Customize this app with
+          your own workflow and UI.
         </div>
         <div className="flex flex-row gap-4 items-start justify-center w-full">
           <HandlerOutput handlerId={taskId} />
@@ -82,10 +83,10 @@ function HandlerOutput({ handlerId }: { handlerId: string | null }) {
 
   // read workflow events here
   const pongsOrResume = handler.events.filter(
-    (event) => isPongEvent(event) || isPauseEvent(event)
+    (event) => isPongEvent(event) || isPauseEvent(event),
   ) as (PongEvent | PauseEvent)[];
   const completed = handler.events.find((event) =>
-    event.type.endsWith(".WorkflowCompletedEvent")
+    event.type.endsWith(".WorkflowCompletedEvent"),
   ) as { type: string; data: { timestamp: string } } | undefined;
 
   return (
