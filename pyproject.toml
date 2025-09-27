@@ -23,7 +23,6 @@ dev = [
     "click>=8.0.0,!=8.3.0",
 ]
 
-
 [tool.hatch.envs.default.scripts]
 "format" = "ruff format ."
 "format-check" = "ruff format --check ."
@@ -34,12 +33,11 @@ test = "pytest"
 "all-check" = ["format-check", "lint-check", "test"]
 "all-fix" = ["format", "lint", "test"]
 
-[tool.llamadeploy.ui]
-directory = "./ui"
-
-[tool.llamadeploy]
-env-files = [".env"]
-
-[tool.llamadeploy.workflows]
-default = "app.workflow:workflow"
-
+ [tool.llamadeploy.ui]
+ directory = "./ui"
+ 
+ [tool.llamadeploy]
+ env-files = [".env"]
+ 
+ [tool.llamadeploy.workflows]
+ default = "app.workflow:workflow"
