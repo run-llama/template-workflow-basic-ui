@@ -24,6 +24,10 @@ jobs:
       
     - name: Run Python checks
       run: uv run hatch run all-check
+    
+    - name: Coder Agent Python checks
+      working-directory: packages/coding-agent
+      run: uv run hatch run all-check
       
   check-ui:
     runs-on: ubuntu-latest
