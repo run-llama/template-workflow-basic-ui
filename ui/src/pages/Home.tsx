@@ -1,14 +1,37 @@
-import { useState } from "react";
-import { useWorkflowRun, useWorkflowHandler } from "@llamaindex/ui";
+import { useEffect, useState } from "react";
+import { useWorkflow, useHandler } from "@llamaindex/ui";
 
 export default function Home() {
   const [handlerId, setHandlerId] = useState<string | null>(null);
-  const run = useWorkflowRun();
-  const handler = useWorkflowHandler(handlerId ?? "");
+  const [isCreating, setIsCreating] = useState(false);
 
-  const result = handler.events.find((e) => e.type.endsWith(".StopEvent")) as
-    | { type: string; data: { result?: string } }
-    | undefined;
+  const workflow = useWorkflow("default");
+  const handler = useHandler(handlerId);
+
+  async function handleRunWorkflow() {
+    setIsCreating(true);
+    try {
+      const h = await workflow.createHandler({});
+      setHandlerId(h.handler_id);
+    } finally {
+      setIsCreating(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!handlerId) return;
+    const subscription = handler.subscribeToEvents({
+      onData: (event) => {
+        // handle stream events here
+      },
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [handler.state.handler_id]);
+
+  // final result available here, as well as error status, etc.
+  const result = handler.state.result?.data?.result as string | undefined;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6">
@@ -20,12 +43,8 @@ export default function Home() {
         <div className="flex items-center justify-center gap-3">
           <button
             type="button"
-            disabled={run.isCreating}
-            onClick={() =>
-              run
-                .runWorkflow("default", {})
-                .then((h) => setHandlerId(h.handler_id))
-            }
+            disabled={isCreating}
+            onClick={handleRunWorkflow}
             className="inline-flex items-center justify-center rounded-xl border px-6 py-3 text-sm font-semibold shadow-sm border-black/10 bg-black/5 text-black hover:bg-black/10 dark:border-white/10 dark:bg-white/10 dark:text-white"
           >
             Run Workflow
@@ -37,9 +56,14 @@ export default function Home() {
               Handler: <code>{handlerId}</code>
             </div>
           )}
-          {result?.data?.result && (
+          {handlerId && (
+            <div className="mt-1">
+              Status: <code>{handler.state.status}</code>
+            </div>
+          )}
+          {result && (
             <div className="mt-2">
-              Result: <code>{result.data.result}</code>
+              Result: <code>{result}</code>
             </div>
           )}
         </div>
